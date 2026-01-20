@@ -36,10 +36,25 @@ public class Cors {
                     bye();
                     break;
                 case ("list"):
+                    System.out.println("Here are the tasks in your list:");
                     this.userList.print();
                     break;
                 default:
-                    this.userList.add(s);
+                    if (s.substring(0, 4).equals("mark")) {
+                        int index = Integer.parseInt(s.substring(5));
+                        if (this.userList.mark(index - 1)) {
+                            System.out.println("Nice! I've marked this task as done:");
+                            this.userList.print(index - 1);
+                        }
+                    } else if (s.substring(0, 6).equals("unmark")) {
+                        int index = Integer.parseInt(s.substring(7));
+                        if (this.userList.unmark(index - 1)) {
+                            System.out.println("OK! I've marked this task as not done yet:");
+                            this.userList.print(index - 1);
+                        }
+                    } else {
+                        this.userList.add(s);
+                    }
             }
             System.out.println("____________________________________");
         }
