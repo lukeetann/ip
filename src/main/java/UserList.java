@@ -15,13 +15,6 @@ public class UserList {
     }
 
     public void print(int index) {
-        System.out.print("[");
-        if (this.myList[index].isCompleted()) {
-            System.out.print("X");
-        } else {
-            System.out.print(" ");
-        }
-        System.out.print("] ");
         System.out.println(this.myList[index].toString());
     }
 

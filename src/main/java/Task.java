@@ -9,7 +9,9 @@ public class Task {
 
     @Override
     public String toString() {
-        return name;
+        String res = completionStatus ? "[X] " : "[ ] ";
+        res += name;
+        return res;
     }
 
     public void markAsComplete() {
@@ -18,9 +20,5 @@ public class Task {
 
     public void markAsIncomplete() {
         completionStatus = false;
-    }
-
-    public boolean isCompleted() {
-        return completionStatus;
     }
 }

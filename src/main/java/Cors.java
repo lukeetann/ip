@@ -40,13 +40,13 @@ public class Cors {
                     this.userList.print();
                     break;
                 default:
-                    if (s.substring(0, 4).equals("mark")) {
+                    if (s.length() >= 6 && s.startsWith("mark")) {
                         int index = Integer.parseInt(s.substring(5));
                         if (this.userList.mark(index - 1)) {
                             System.out.println("Nice! I've marked this task as done:");
                             this.userList.print(index - 1);
                         }
-                    } else if (s.substring(0, 6).equals("unmark")) {
+                    } else if (s.length() >= 8 && s.startsWith("unmark")) {
                         int index = Integer.parseInt(s.substring(7));
                         if (this.userList.unmark(index - 1)) {
                             System.out.println("OK! I've marked this task as not done yet:");

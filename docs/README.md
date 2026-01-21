@@ -1,4 +1,4 @@
-# Duke User Guide
+# Cors User Guide
 
 // Update the title above to match the actual product name
 
