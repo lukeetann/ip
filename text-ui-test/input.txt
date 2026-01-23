@@ -1,0 +1,10 @@
+buy a book
+todo read the book
+deadline write report on book /by Monday 2359
+event attend sister's wedding /from Saturday 9am /to 9pm
+list
+mark 1
+mark 4
+unmark 4
+list
+bye

@@ -59,7 +59,7 @@ public class Cors {
                         this.userList.add(s.substring(9, by - 5), s.substring(by));
                     } else if (s.length() >= 7 && s.startsWith("event")) {
                         int from = s.indexOf(" /from ") + 7;
-                        int to = s.indexOf(" /to ") + 4;
+                        int to = s.indexOf(" /to ") + 5;
                         this.userList.add(s.substring(6, from - 7), s.substring(from, (to - 4)), s.substring(to));
                     } else {
                         this.userList.add(s);

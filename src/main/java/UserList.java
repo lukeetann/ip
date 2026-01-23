@@ -43,7 +43,7 @@ public class UserList {
         Task t = new Todo(name);
         myList[length] = t;
         length++;
-        System.out.println("Got it, I've added this task: \n" + t
+        System.out.println("Got it, I've added this task:\n" + t
                 + "\nNow you have " + (length) + " tasks in your list.");;
     }
 
@@ -54,7 +54,7 @@ public class UserList {
         Task t = new Deadline(name, by);
         myList[length] = t;
         length++;
-        System.out.println("Got it, I've added this task: \n" + t
+        System.out.println("Got it, I've added this task:\n" + t
                 + "\nNow you have " + (length) + " tasks in your list.");
     }
 
@@ -65,6 +65,6 @@ public class UserList {
         Task t = new Event(name, from, to);
         myList[length] = t;
         length++;
-        System.out.println("Got it, I've added this task: \n" + t
+        System.out.println("Got it, I've added this task:\n" + t
                 + "\nNow you have " + (length) + " tasks in your list.");    }
 }

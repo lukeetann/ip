@@ -1,7 +1,55 @@
-Hello from
- ____        _        
-|  _ \ _   _| | _____ 
-| | | | | | | |/ / _ \
-| |_| | |_| |   <  __/
-|____/ \__,_|_|\_\___|
+Hello! I'm your friendly chatbot, Cors!
+ ██████   ████████  ████████    ████████
+██       ██      ██ ██      ██ ██
+██       ██      ██ ████████    ██████
+██       ██      ██ ██   ██          ██
+ ██████   ████████  ██     ██  ████████
 
+____________________________________
+Got it, I've added this task:
+[T] [ ] buy a book
+Now you have 1 tasks in your list.
+____________________________________
+____________________________________
+Got it, I've added this task:
+[T] [ ] read the book
+Now you have 2 tasks in your list.
+____________________________________
+____________________________________
+Got it, I've added this task:
+[D] [ ] write report on book (by: Monday 2359)
+Now you have 3 tasks in your list.
+____________________________________
+____________________________________
+Got it, I've added this task:
+[E] [ ] attend sister's wedding (from: Saturday 9am  to: 9pm)
+Now you have 4 tasks in your list.
+____________________________________
+____________________________________
+Here are the tasks in your list:
+1.[T] [ ] buy a book
+2.[T] [ ] read the book
+3.[D] [ ] write report on book (by: Monday 2359)
+4.[E] [ ] attend sister's wedding (from: Saturday 9am  to: 9pm)
+____________________________________
+____________________________________
+Nice! I've marked this task as done:
+[T] [X] buy a book
+____________________________________
+____________________________________
+Nice! I've marked this task as done:
+[E] [X] attend sister's wedding (from: Saturday 9am  to: 9pm)
+____________________________________
+____________________________________
+OK! I've marked this task as not done yet:
+[E] [ ] attend sister's wedding (from: Saturday 9am  to: 9pm)
+____________________________________
+____________________________________
+Here are the tasks in your list:
+1.[T] [X] buy a book
+2.[T] [ ] read the book
+3.[D] [ ] write report on book (by: Monday 2359)
+4.[E] [ ] attend sister's wedding (from: Saturday 9am  to: 9pm)
+____________________________________
+____________________________________
+       Goodbye. Have a nice day!
