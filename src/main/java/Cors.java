@@ -52,6 +52,15 @@ public class Cors {
                             System.out.println("OK! I've marked this task as not done yet:");
                             this.userList.print(index - 1);
                         }
+                    } else if (s.length() >= 6 && s.startsWith("todo")) {
+                        this.userList.add(s.substring(5));
+                    } else if (s.length() >= 10 && s.startsWith("deadline")) {
+                        int by = s.indexOf(" /by ") + 5;
+                        this.userList.add(s.substring(9, by - 5), s.substring(by));
+                    } else if (s.length() >= 7 && s.startsWith("event")) {
+                        int from = s.indexOf(" /from ") + 7;
+                        int to = s.indexOf(" /to ") + 4;
+                        this.userList.add(s.substring(6, from - 7), s.substring(from, (to - 4)), s.substring(to));
                     } else {
                         this.userList.add(s);
                     }

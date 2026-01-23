@@ -36,10 +36,35 @@ public class UserList {
         return true;
     }
 
-    public void add(String s) {
-        Task t = new Task(s);
+    /**
+     * Adds a new Todo task
+     */
+    public void add(String name) {
+        Task t = new Todo(name);
         myList[length] = t;
         length++;
-        System.out.println("Added: " + s);
+        System.out.println("Got it, I've added this task: \n" + t
+                + "\nNow you have " + (length) + " tasks in your list.");;
     }
+
+    /**
+     * Adds a new Deadline task
+     */
+    public void add(String name, String by) {
+        Task t = new Deadline(name, by);
+        myList[length] = t;
+        length++;
+        System.out.println("Got it, I've added this task: \n" + t
+                + "\nNow you have " + (length) + " tasks in your list.");
+    }
+
+    /**
+     * Adds a new Event task
+     */
+    public void add(String name, String from, String to) {
+        Task t = new Event(name, from, to);
+        myList[length] = t;
+        length++;
+        System.out.println("Got it, I've added this task: \n" + t
+                + "\nNow you have " + (length) + " tasks in your list.");    }
 }
