@@ -52,4 +52,12 @@ Here are the tasks in your list:
 4.[E] [ ] attend sister's wedding (from: Saturday 9am  to: 9pm)
 ____________________________________
 ____________________________________
+Usage: todo <todo item>
+E.g. todo buy book
+____________________________________
+____________________________________
+Incorrect input!
+To add an item to the list, type todo, deadline, or event.
+____________________________________
+____________________________________
        Goodbye. Have a nice day!
