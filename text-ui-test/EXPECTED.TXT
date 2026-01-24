@@ -58,6 +58,14 @@ ____________________________________
 ____________________________________
 Incorrect input!
 To add an item to the list, type todo, deadline, or event.
+To remove an item, type delete
+To mark an item, type mark.
+To unmark an item, type unmark.
+____________________________________
+____________________________________
+Ok, I have removed this task:
+[T] [X] buy a book
+Now you have 3 tasks left.
 ____________________________________
 ____________________________________
        Goodbye. Have a nice day!

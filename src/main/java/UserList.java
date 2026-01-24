@@ -1,9 +1,11 @@
+import java.util.ArrayList;
+
 public class UserList {
-    private Task[] myList;
+    private ArrayList<Task> myList;
     private int length;
 
     public UserList() {
-        this.myList = new Task[100];
+        this.myList = new ArrayList<>(100);
         this.length = 0;
     }
 
@@ -15,7 +17,7 @@ public class UserList {
     }
 
     public void print(int index) {
-        System.out.println(this.myList[index].toString());
+        System.out.println(this.myList.get(index).toString());
     }
 
     public boolean mark(int index) {
@@ -23,7 +25,7 @@ public class UserList {
             System.out.println("Sorry, there is no task at index " + (index + 1));
             return false;
         }
-        myList[index].markAsComplete();
+        myList.get(index).markAsComplete();
         return true;
     }
 
@@ -32,7 +34,7 @@ public class UserList {
             System.out.println("Sorry, there is no task at index " + (index + 1));
             return false;
         }
-        myList[index].markAsIncomplete();
+        myList.get(index).markAsIncomplete();
         return true;
     }
 
@@ -41,7 +43,7 @@ public class UserList {
      */
     public void add(String name) {
         Task t = new Todo(name);
-        myList[length] = t;
+        myList.add(t);
         length++;
         System.out.println("Got it, I've added this task:\n" + t
                 + "\nNow you have " + (length) + " tasks in your list.");;
@@ -52,7 +54,7 @@ public class UserList {
      */
     public void add(String name, String by) {
         Task t = new Deadline(name, by);
-        myList[length] = t;
+        myList.add(t);
         length++;
         System.out.println("Got it, I've added this task:\n" + t
                 + "\nNow you have " + (length) + " tasks in your list.");
@@ -63,8 +65,20 @@ public class UserList {
      */
     public void add(String name, String from, String to) {
         Task t = new Event(name, from, to);
-        myList[length] = t;
+        myList.add(t);
         length++;
         System.out.println("Got it, I've added this task:\n" + t
-                + "\nNow you have " + (length) + " tasks in your list.");    }
+                + "\nNow you have " + (length) + " tasks in your list.");
+    }
+
+    public void delete(int num) {
+        if (num < 0 || num > myList.size()) {
+            throw new IncorrectTextException();
+        } else {
+            System.out.println("Ok, I have removed this task:\n" + myList.get(num) +
+                    "\nNow you have " + (myList.size() - 1) + " tasks left.");
+            myList.remove(num);
+            length--;
+        }
+    }
 }

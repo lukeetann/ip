@@ -78,12 +78,21 @@ public class Cors {
                                         "/from <start time> /to <end time>\n" +
                                         "E.g. attend lecture /from Tuesday 2pm /to 9pm");
                             }
+                        } else if (s.startsWith("delete")) {
+                            if (s.length() > 7) { // delete must be followed by some number
+                                int index = Integer.parseInt(s.substring(7));
+                                this.userList.delete(index - 1);
+                            } else {
+                                System.out.println("Usage: delete <number>\nE.g. delete 3");
+                            }
                         } else {
                             throw new IncorrectTextException();
                         }
                 }
             } catch (IncorrectTextException e) {
-                System.out.println("Incorrect input!\nTo add an item to the list, type todo, deadline, or event.");
+                System.out.println("Incorrect input!\nTo add an item to the list, type todo, deadline, or event.\n" +
+                        "To remove an item, type delete\nTo mark an item, type mark.\n" +
+                        "To unmark an item, type unmark.");
             }
             System.out.println("____________________________________");
         }
