@@ -1,3 +1,5 @@
+package cors;
+
 public class Task {
     private String name;
     private boolean completionStatus;
