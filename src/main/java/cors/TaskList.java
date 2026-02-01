@@ -1,12 +1,11 @@
 package cors;
-
 import java.util.ArrayList;
 
-public class UserList {
+public class TaskList {
     private ArrayList<Task> myList;
     private int length;
 
-    public UserList() {
+    public TaskList() {
         this.myList = new ArrayList<>(100);
         this.length = 0;
     }
@@ -19,7 +18,14 @@ public class UserList {
     }
 
     public void print(int index) {
-        System.out.println(this.myList.get(index).toString());
+        System.out.println(get(index));
+    }
+
+    public String get(int index) {
+        if (index < length) {
+            return this.myList.get(index).toString();
+        }
+        return "";
     }
 
     public boolean mark(int index) {
@@ -43,34 +49,11 @@ public class UserList {
     /**
      * Adds a new Todo task
      */
-    public void add(String name) {
-        Task t = new Todo(name);
-        myList.add(t);
+    public String add(Task task) {
+        myList.add(task);
         length++;
-        System.out.println("Got it, I've added this task:\n" + t
-                + "\nNow you have " + (length) + " tasks in your list.");;
-    }
-
-    /**
-     * Adds a new Deadline task
-     */
-    public void add(String name, String by) {
-        Task t = new Deadline(name, by);
-        myList.add(t);
-        length++;
-        System.out.println("Got it, I've added this task:\n" + t
-                + "\nNow you have " + (length) + " tasks in your list.");
-    }
-
-    /**
-     * Adds a new Event task
-     */
-    public void add(String name, String from, String to) {
-        Task t = new Event(name, from, to);
-        myList.add(t);
-        length++;
-        System.out.println("Got it, I've added this task:\n" + t
-                + "\nNow you have " + (length) + " tasks in your list.");
+        return "Got it, I've added this task:\n" + task
+                + "\nNow you have " + (length) + " tasks in your list.";
     }
 
     public void delete(int num) {
