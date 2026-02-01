@@ -1,8 +1,8 @@
 package cors;
 
 public class Todo extends Task {
-    public Todo(String s) {
-        super(s);
+    public Todo(String s, boolean isCompleted) {
+        super(s, isCompleted);
     }
 
     @Override

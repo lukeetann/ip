@@ -4,8 +4,8 @@ public class Event extends Task {
     private String from;
     private String to;
 
-    public Event(String name, String from, String to) {
-        super(name);
+    public Event(String name, boolean isCompleted, String from, String to) {
+        super(name, isCompleted);
         this.from = from;
         this.to = to;
     }
