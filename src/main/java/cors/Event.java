@@ -1,10 +1,13 @@
 package cors;
 
-public class Event extends Task {
-    private String from;
-    private String to;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-    public Event(String name, boolean isCompleted, String from, String to) {
+public class Event extends Task {
+    private LocalDateTime from;
+    private LocalDateTime to;
+
+    public Event(String name, boolean isCompleted, LocalDateTime from, LocalDateTime to) {
         super(name, isCompleted);
         this.from = from;
         this.to = to;
@@ -12,6 +15,7 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return "[E] " + super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[E] " + super.toString() + " (from: " + from.format(DateTimeFormatter.ofPattern("d MMM yyyy', 'ha")) + " to: "
+                + to.format(DateTimeFormatter.ofPattern("d MMM yyyy', 'ha"))+ ")";
     }
 }

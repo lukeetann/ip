@@ -1,4 +1,8 @@
 package cors;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 
 public class Parser {
@@ -16,6 +20,7 @@ public class Parser {
         if (input.isEmpty()) {
             res.add("empty");
         } else {
+            String pattern;
             switch (input.substring(0, 3)) {
             case ("[T]"):
                 res.add("todo");
@@ -35,7 +40,14 @@ public class Parser {
                 } else {
                     res.add("unmarked");
                 }
-                res.add(input.substring(indexBy + 6, input.length() - 1)); //add the /by
+                if (input.length() - indexBy - 7 > 15) {
+                    pattern = "dd MMM yyyy', 'ha";
+                } else {
+                    pattern = "d MMM yyyy', 'ha";
+                }
+                res.add(LocalDateTime.parse(input.substring(indexBy + 6, input.length() - 1),
+                        DateTimeFormatter.ofPattern(pattern))
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"))); //add the /by
                 break;
             case ("[E]"):
                 res.add("event");
@@ -47,8 +59,22 @@ public class Parser {
                 } else {
                     res.add("unmarked");
                 }
-                res.add(input.substring(indexFrom + 8, indexTo)); //add the /from
-                res.add(input.substring(indexTo + 5, input.length() - 1)); //add the /to
+                if (indexTo - indexFrom - 8 > 15) {
+                    pattern = "dd MMM yyyy', 'ha";
+                } else {
+                    pattern = "d MMM yyyy', 'ha";
+                }
+                res.add(LocalDateTime.parse(input.substring(indexFrom + 8, indexTo),
+                        DateTimeFormatter.ofPattern(pattern))
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"))); //add the /from
+                if (input.length() - indexTo - 6 > 15) {
+                    pattern = "dd MMM yyyy', 'ha";
+                } else {
+                    pattern = "d MMM yyyy', 'ha";
+                }
+                res.add(LocalDateTime.parse(input.substring(indexTo + 5, input.length() - 1),
+                        DateTimeFormatter.ofPattern(pattern))
+                        .format(DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"))); //add the /to
                 break;
             default:
                 res.add("fail");
@@ -88,10 +114,10 @@ public class Parser {
                 }
                 res.add("unmarked");
             } else if (input.startsWith("deadline")) {
-                res.add(input.substring(0, 8));
+                res.add(input.substring(0, 8)); // type is deadline
                 int by = input.indexOf(" /by ") + 5;
                 if (input.length() >= 10 && by > 4) {
-                    res.add(input.substring(9, by - 5));
+                    res.add(input.substring(9, by - 5)); // add task
                     res.add("unmarked");
                     res.add(input.substring(by));
                 }
@@ -102,7 +128,7 @@ public class Parser {
                     int to = input.indexOf(" /to ") + 5;
                     res.add(input.substring(6, from - 7));
                     res.add("unmarked");
-                    res.add(input.substring(from, (to - 4)));
+                    res.add(input.substring(from, (to - 5)));
                     res.add(input.substring(to));
                 }
             } else if (input.startsWith("delete")) {

@@ -6,6 +6,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -60,6 +64,7 @@ public class Cors {
     }
 
     private void run() {
+        System.out.println("How can I help you?");
         Scanner input = new Scanner(System.in);
         while (true) {
             String s = input.nextLine();
@@ -115,12 +120,17 @@ public class Cors {
         case ("deadline"):
             if (arg.size() < 4) {
                 System.out.println("Usage: deadline <deadline item> /by <deadline>\n" +
-                        "E.g. deadline finish writing essay /by Tuesday 9pm");
+                        "E.g. deadline finish writing essay /by 09-05-2026 1800");
             } else {
-                String result = taskList.add(new Deadline(arg.get(1),
-                        arg.get(2).equals("marked"), arg.get(3)));
-                if (fromUser) {
-                    System.out.println(result);
+                try {
+                    String result = taskList.add(new Deadline(arg.get(1),
+                            arg.get(2).equals("marked"), LocalDateTime.parse(arg.get(3),
+                            DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"))));
+                    if (fromUser) {
+                        System.out.println(result);
+                    }
+                } catch (DateTimeException e) {
+                    System.out.println("Error getting date from deadline.");
                 }
             }
             break;
@@ -128,12 +138,17 @@ public class Cors {
             if (arg.size() < 5) {
                 System.out.println("Usage: event <event item>" +
                         "/from <start time> /to <end time>\n" +
-                        "E.g. attend lecture /from Tuesday 2pm /to 9pm");
+                        "E.g. event attend lecture /from 05-12-2025 1800 /to 31-12-2025 2100");
             } else {
-                String result = taskList.add(new Event(arg.get(1), arg.get(2).equals("marked"),
-                        arg.get(3), arg.get(4)));
-                if (fromUser) {
-                    System.out.println(result);
+                try {
+                    String result = taskList.add(new Event(arg.get(1), arg.get(2).equals("marked"),
+                            LocalDateTime.parse(arg.get(3), DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm")),
+                            LocalDateTime.parse(arg.get(4), DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm"))));
+                    if (fromUser) {
+                        System.out.println(result);
+                    }
+                } catch (DateTimeException e) {
+                    System.out.println("Error getting date from event.");
                 }
             }
             break;
@@ -151,8 +166,8 @@ public class Cors {
                 System.out.println("Incorrect input!\n" +
                         "To add an item to the list, type todo, deadline, or event.\n" +
                         "To remove an item, type delete\n" +
-                        "To mark an item, type mark.\n" +
-                        "To unmark an item, type unmark.");
+                        "To mark an item, type mark <index>.\n" +
+                        "To unmark an item, type unmark <index>.");
             } else {
                 System.out.println("File corrupted. Unable to read task");
             }
