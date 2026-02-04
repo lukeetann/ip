@@ -1,4 +1,5 @@
 package cors;
+
 import java.util.ArrayList;
 
 public class TaskList {
@@ -10,15 +11,15 @@ public class TaskList {
         this.length = 0;
     }
 
-    public void print() {
-        for (int i = 0; i < this.length; i++) {
-            System.out.print((i + 1) + ".");
-            print(i);
+    public TaskList(String[] tasks) {
+        TaskList taskList = new TaskList();
+        Parser parser = new Parser();
+        for (int i = 0; i < 100; i ++) {
+            Command c = parser.parseFromFile(tasks[i]);
+            taskList = c.runCommand(taskList, new Ui(), null);
         }
-    }
-
-    public void print(int index) {
-        System.out.println(get(index));
+        this.myList = taskList.myList;
+        this.length = taskList.length;
     }
 
     public String get(int index) {
@@ -26,6 +27,14 @@ public class TaskList {
             return this.myList.get(index).toString();
         }
         return "";
+    }
+
+    public String[] getAllTasks() {
+        String[] allTasks = new String[length];
+        for (int i = 0; i < length; i++) {
+            allTasks[i] = get(i);
+        }
+        return allTasks;
     }
 
     public boolean mark(int index) {
