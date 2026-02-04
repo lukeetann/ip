@@ -1,4 +1,4 @@
-package cors;
+package cors.task;
 
 public class Task {
     private String name;

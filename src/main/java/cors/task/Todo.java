@@ -1,4 +1,4 @@
-package cors;
+package cors.task;
 
 public class Todo extends Task {
     public Todo(String s, boolean isCompleted) {

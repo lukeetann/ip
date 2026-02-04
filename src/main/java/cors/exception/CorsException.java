@@ -1,4 +1,4 @@
-package cors;
+package cors.exception;
 
 public class CorsException extends RuntimeException {
     public CorsException(String exception) {

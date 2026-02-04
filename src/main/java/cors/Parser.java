@@ -1,5 +1,10 @@
 package cors;
 
+import cors.command.Command;
+import cors.command.CommandType;
+import cors.exception.FileErrorException;
+import cors.ui.Ui;
+
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -93,11 +98,11 @@ public class Parser {
         default:
             if (input.length() >= 6 && input.startsWith("mark")) {
                 int index = Integer.parseInt(input.substring(5));
-                c.mark();
+                c.setType(CommandType.MARK);
                 c.setIndex(index);
             } else if (input.length() >= 8 && input.startsWith("unmark")) {
                 int index = Integer.parseInt(input.substring(7));
-                c.unmark();
+                c.setType(CommandType.UNMARK);
                 c.setIndex(index);
             } else if (input.startsWith("todo")) {
                 c.setType(CommandType.TODO);

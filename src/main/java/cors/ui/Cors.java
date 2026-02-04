@@ -1,4 +1,10 @@
-package cors;
+package cors.ui;
+
+import cors.Parser;
+import cors.Storage;
+import cors.command.Command;
+import cors.exception.CorsException;
+import cors.task.TaskList;
 
 import java.util.Scanner;
 

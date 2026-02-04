@@ -1,4 +1,11 @@
-package cors;
+package cors.command;
+
+import cors.Storage;
+import cors.task.TaskList;
+import cors.task.Deadline;
+import cors.task.Event;
+import cors.task.Todo;
+import cors.ui.Ui;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
@@ -121,7 +128,6 @@ public class Command {
             break;
         case FAIL:
             ui.showUserCommandError();
-            ui.showFileCorruptedError();
             break;
         default:
             System.out.println("You shouldn't be here...");
