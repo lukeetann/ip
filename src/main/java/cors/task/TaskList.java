@@ -1,4 +1,9 @@
-package cors;
+package cors.task;
+
+import cors.Parser;
+import cors.command.Command;
+import cors.exception.IncorrectTextException;
+import cors.ui.Ui;
 
 import java.util.ArrayList;
 

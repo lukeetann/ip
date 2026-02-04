@@ -1,4 +1,4 @@
-package cors;
+package cors.exception;
 
 public class FileErrorException extends CorsException {
     public FileErrorException() {

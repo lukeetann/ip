@@ -1,4 +1,4 @@
-package cors;
+package cors.exception;
 
 public class IncorrectDateException extends CorsException {
     public IncorrectDateException() {

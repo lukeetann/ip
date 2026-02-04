@@ -1,4 +1,4 @@
-package cors;
+package cors.ui;
 
 public class Ui {
     private String logo = " ██████   ████████  ████████    ████████\n"
