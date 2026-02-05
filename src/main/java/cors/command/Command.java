@@ -25,8 +25,13 @@ public class Command {
         index = -1;
     }
 
-    public void setType(CommandType type) {
+    public Command setType(CommandType type) {
         this.type = type;
+        return this;
+    }
+
+    public CommandType getType() {
+        return type;
     }
 
     public void setTask(String task) {
