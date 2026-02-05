@@ -1,14 +1,14 @@
 package cors;
 
-import cors.command.Command;
-import cors.command.CommandType;
-import cors.exception.FileErrorException;
-import cors.ui.Ui;
-
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+
+import cors.command.Command;
+import cors.command.CommandType;
+import cors.exception.FileErrorException;
+import cors.ui.Ui;
 
 /**
  * Deals with making sense of the user command or data loaded from a file.
@@ -96,7 +96,7 @@ public class Parser {
 
     /**
      * Parses the raw user input from the CLI into a Command object.
-     * * @param input The full command string entered by the user.
+     * @param input The full command string entered by the user.
      * @param ui The UI object used to display immediate feedback/errors.
      * @return A Command object representing the user's intent.
      */
