@@ -1,12 +1,11 @@
 package cors.ui;
+import java.util.Scanner;
 
 import cors.Parser;
 import cors.Storage;
 import cors.command.Command;
 import cors.exception.CorsException;
 import cors.task.TaskList;
-
-import java.util.Scanner;
 
 public class Cors {
     private TaskList taskList;

@@ -1,11 +1,13 @@
 package cors.ui;
 
 public class Ui {
-    private String logo = " ██████   ████████  ████████    ████████\n"
-            + "██       ██      ██ ██      ██ ██\n"
-            + "██       ██      ██ ████████    ██████\n"
-            + "██       ██      ██ ██   ██          ██\n"
-            + " ██████   ████████  ██     ██  ████████\n";
+    private String logo = """
+                           ██████   ████████  ████████    ████████
+                          ██       ██      ██ ██      ██ ██
+                          ██       ██      ██ ████████    ██████
+                          ██       ██      ██ ██   ██          ██
+                           ██████   ████████  ██     ██  ████████
+                          """;
     private boolean isVisible;
 
     public Ui() {
@@ -33,27 +35,27 @@ public class Ui {
     }
 
     public void showDeadlineError() {
-        show("Usage: deadline <deadline item> /by <deadline>\n" +
-                "E.g. deadline finish writing essay /by 09-05-2026 1800");
+        show("Usage: deadline <deadline item> /by <deadline>\n"
+                + "E.g. deadline finish writing essay /by 09-05-2026 1800");
     }
 
     public void showEventError() {
-        show("Usage: event <event item>" +
-                "/from <start time> /to <end time>\n" +
-                "E.g. event attend lecture /from 05-12-2025 1800 /to 31-12-2025 2100");
+        show("Usage: event <event item>"
+                + "/from <start time> /to <end time>\n"
+                + "E.g. event attend lecture /from 05-12-2025 1800 /to 31-12-2025 2100");
     }
 
     public void showDateTimeError() {
-        System.out.println("Error getting date\n" +
-                "Date must be formatted as such: dd-mm-yyyy 24h");
+        System.out.println("Error getting date\n"
+                + "Date must be formatted as such: dd-mm-yyyy 24h");
     }
 
     public void showUserCommandError() {
-        show("Incorrect input!\n" +
-                "To add an item to the list, type todo, deadline, or event.\n" +
-                "To remove an item, type delete\n" +
-                "To mark an item, type mark <index>.\n" +
-                "To unmark an item, type unmark <index>.");
+        show("Incorrect input!\n"
+                + "To add an item to the list, type todo, deadline, or event.\n"
+                + "To remove an item, type delete\n"
+                + "To mark an item, type mark <index>.\n"
+                + "To unmark an item, type unmark <index>.");
     }
 
     public void showFileCorruptedError() {

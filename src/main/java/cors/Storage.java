@@ -1,12 +1,11 @@
 package cors;
-
-import cors.exception.CorsException;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+
+import cors.exception.CorsException;
 
 /**
  * Handles the loading and saving of task data to a local file.
