@@ -129,6 +129,9 @@ public class Command {
                 taskList.delete(index - 1);
             }
             break;
+        case FIND:
+            ui.showMatchingTasks(taskList.getMatchingTasks(task));
+            break;
         case EMPTY:
             break;
         case FAIL:

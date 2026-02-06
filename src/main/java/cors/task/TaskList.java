@@ -42,6 +42,18 @@ public class TaskList {
         return allTasks;
     }
 
+    public String[] getMatchingTasks(String taskString) {
+        String[] matchingTasks = new String[length];
+        int i = 0;
+        for (Task task : myList) {
+            if (task.toString().contains(taskString)) {
+                matchingTasks[i] = task.toString();
+                i++;
+            }
+        }
+        return matchingTasks;
+    }
+
     public boolean mark(int index) {
         if (index >= length || index < 0) {
             System.out.println("Sorry, there is no task at index " + (index + 1));
