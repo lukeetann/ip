@@ -62,6 +62,18 @@ public class TaskList {
         return allTasks;
     }
 
+    public String[] getMatchingTasks(String taskString) {
+        String[] matchingTasks = new String[length];
+        int i = 0;
+        for (Task task : myList) {
+            if (task.toString().contains(taskString)) {
+                matchingTasks[i] = task.toString();
+                i++;
+            }
+        }
+        return matchingTasks;
+    }
+
     /**
      * Marks a task as completed.
      * @param index The zero-based index of the task to mark.

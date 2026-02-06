@@ -79,6 +79,15 @@ public class Ui {
         }
     }
 
+    public void showMatchingTasks(String[] tasks) {
+        show("Here are the matching tasks in your list:");
+        for (String task : tasks) {
+            if (task != null) {
+                show(task);
+            }
+        }
+    }
+
     public void showTaskAsDone(String task) {
         show("Nice! I've marked this task as done:");
         show(task);

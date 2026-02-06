@@ -61,32 +61,36 @@ public class Parser {
                         format));
                 break;
             case ("[E]"):
-                c.setType(CommandType.EVENT);
-                int indexFrom = input.indexOf(" (from: ");
-                int indexTo = input.indexOf(" to: ");
-                c.setTask(input.substring(8, indexFrom));
-                if (input.charAt(5) == 'X') {
-                    c.mark();
-                } else {
-                    c.unmark();
+                try {
+                    c.setType(CommandType.EVENT);
+                    int indexFrom = input.indexOf(" (from: ");
+                    int indexTo = input.indexOf(" to: ");
+                    c.setTask(input.substring(8, indexFrom));
+                    if (input.charAt(5) == 'X') {
+                        c.mark();
+                    } else {
+                        c.unmark();
+                    }
+                    // Handle dynamic date padding for 'from' field
+                    if (indexTo - indexFrom - 8 > 15) {
+                        pattern = "dd MMM yyyy', 'ha";
+                    } else {
+                        pattern = "d MMM yyyy', 'ha";
+                    }
+                    c.setFrom(LocalDateTime.parse(input.substring(indexFrom + 8, indexTo),
+                            DateTimeFormatter.ofPattern(pattern)));
+                    // Handle dynamic date padding for 'to' field
+                    if (input.length() - indexTo - 6 > 15) {
+                        pattern = "dd MMM yyyy', 'ha";
+                    } else {
+                        pattern = "d MMM yyyy', 'ha";
+                    }
+                    c.setTo(LocalDateTime.parse(input.substring(indexTo + 5, input.length() - 1),
+                            DateTimeFormatter.ofPattern(pattern)));
+                    break;
+                } catch (DateTimeException e) {
+                    throw new FileErrorException();
                 }
-                // Handle dynamic date padding for 'from' field
-                if (indexTo - indexFrom - 8 > 15) {
-                    pattern = "dd MMM yyyy', 'ha";
-                } else {
-                    pattern = "d MMM yyyy', 'ha";
-                }
-                c.setFrom(LocalDateTime.parse(input.substring(indexFrom + 8, indexTo),
-                        DateTimeFormatter.ofPattern(pattern)));
-                // Handle dynamic date padding for 'to' field
-                if (input.length() - indexTo - 6 > 15) {
-                    pattern = "dd MMM yyyy', 'ha";
-                } else {
-                    pattern = "d MMM yyyy', 'ha";
-                }
-                c.setTo(LocalDateTime.parse(input.substring(indexTo + 5, input.length() - 1),
-                        DateTimeFormatter.ofPattern(pattern)));
-                break;
             default:
                 throw new FileErrorException();
             }
@@ -161,6 +165,11 @@ public class Parser {
                 if (input.length() > 7) {
                     int index = Integer.parseInt(input.substring(7));
                     c.setIndex(index);
+                }
+            } else if (input.startsWith("find")) {
+                c.setType(CommandType.FIND);
+                if (input.length() > 5) {
+                    c.setTask(input.substring(5));
                 }
             } else {
                 c.setType(CommandType.FAIL);
