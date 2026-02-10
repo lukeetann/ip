@@ -92,7 +92,7 @@ public class Parser {
                     throw new FileErrorException();
                 }
             default:
-                throw new FileErrorException();
+                throw new FileErrorException(); // Possibly misleading since it takes in a String[]
             }
         }
         return c;

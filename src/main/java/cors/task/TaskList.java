@@ -2,7 +2,7 @@ package cors.task;
 
 import cors.Parser;
 import cors.command.Command;
-import cors.exception.IncorrectTextException;
+import cors.exception.WrongIndexException;
 import cors.ui.Ui;
 
 import java.util.ArrayList;
@@ -117,16 +117,17 @@ public class TaskList {
     /**
      * Deletes a task from the list based on its index.
      * @param num The zero-based index of the task to be removed.
-     * @throws IncorrectTextException If the index provided is negative or out of bounds.
+     * @throws WrongIndexException If the index provided is negative or out of bounds.
      */
-    public void delete(int num) {
+    public String delete(int num) {
         if (num < 0 || num >= myList.size()) {
-            throw new IncorrectTextException();
+            throw new WrongIndexException();
         } else {
-            System.out.println("Ok, I have removed this task:\n" + myList.get(num) +
-                    "\nNow you have " + (myList.size() - 1) + " tasks left.");
+            String result = ("Ok, I have removed this task:\n" + myList.get(num)
+                    + "\nNow you have " + (myList.size() - 1) + " tasks left.");
             myList.remove(num);
             length--;
+            return result;
         }
     }
 }

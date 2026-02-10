@@ -4,6 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
 import cors.Storage;
+import cors.exception.WrongIndexException;
 import cors.task.Deadline;
 import cors.task.Event;
 import cors.task.TaskList;
@@ -97,7 +98,7 @@ public class Command {
             if (task == null) {
                 ui.showTodoError();
             } else {
-                ui.show(taskList.add(new Todo(task, isMarked)));
+                ui.addToResponse(taskList.add(new Todo(task, isMarked)));
             }
             break;
         case DEADLINE:
@@ -105,7 +106,7 @@ public class Command {
                 ui.showDeadlineError();
             } else {
                 try {
-                    ui.show(taskList.add(new Deadline(task, isMarked, by)));
+                    ui.addToResponse(taskList.add(new Deadline(task, isMarked, by)));
                 } catch (DateTimeException e) {
                     ui.showDateTimeError();
                 }
@@ -116,17 +117,17 @@ public class Command {
                 ui.showEventError();
             } else {
                 try {
-                    ui.show(taskList.add(new Event(task, isMarked, from, to)));
+                    ui.addToResponse(taskList.add(new Event(task, isMarked, from, to)));
                 } catch (DateTimeException e) {
                     ui.showDateTimeError();
                 }
             }
             break;
         case DELETE:
-            if (index < 0) {
-                System.out.println("Usage: delete <number>\nE.g. delete 3");
-            } else {
-                taskList.delete(index - 1);
+            try {
+                ui.addToResponse(taskList.delete(index - 1));
+            } catch (WrongIndexException e) {
+                ui.addToResponse("Usage: delete <number>\nE.g. delete 3");
             }
             break;
         case FIND:
