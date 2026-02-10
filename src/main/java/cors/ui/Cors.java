@@ -1,5 +1,4 @@
 package cors.ui;
-import java.util.Scanner;
 
 import cors.Parser;
 import cors.Storage;
@@ -7,41 +6,37 @@ import cors.command.Command;
 import cors.exception.CorsException;
 import cors.task.TaskList;
 
+/**
+ * Basic Cors class to run the cors chatbot
+ */
 public class Cors {
     private TaskList taskList;
     private Storage storage;
     private Ui ui;
 
-    public static void main(String[] args) {
-        new Cors("./src/main/java/cors/cors.csv").run();
-    }
-
+    /**
+     * Initiates a new Cors instance with the given filepath
+     * @param filePath String filepath from root folder
+     */
     public Cors(String filePath) {
         storage = new Storage(filePath);
         ui = new Ui();
         try {
             taskList = new TaskList(storage.load());
         } catch (CorsException e) {
-            ui.makeVisible();
-            ui.showLoadingError();
             taskList = new TaskList();
         }
-        ui.makeVisible();
     }
 
-    private void run() {
-        ui.showLogo();
-        ui.greet();
-        Scanner input = new Scanner(System.in);
-        boolean isExit = false;
-        while (!isExit) {
-            String s = input.nextLine();
-            System.out.println("____________________________________");
+    public String getResponse(String input) {
+        try {
+            ui.addToResponse("Cor KAWWWW!\n");
             Parser parser = new Parser();
-            Command c = parser.parse(s, ui);
+            Command c = parser.parse(input, ui);
             c.runCommand(taskList, ui, storage);
-            isExit = c.isExit();
-            System.out.println("____________________________________");
+            return ui.getResponse();
+        } catch (Exception e) {
+            return e.getMessage();
         }
     }
 }
