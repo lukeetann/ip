@@ -22,6 +22,7 @@ public class Main extends Application {
             stage.setScene(scene);
             stage.setMinHeight(220);
             stage.setMinWidth(417);
+            assert(cors != null);
             fxmlLoader.<MainWindow>getController().setCors(cors); // inject the Cors instance
             stage.show();
         } catch (IOException e) {
