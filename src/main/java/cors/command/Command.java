@@ -79,6 +79,7 @@ public class Command {
     public TaskList runCommand(TaskList taskList, Ui ui, Storage storage) {
         switch (type) {
         case BYE:
+            assert(taskList != null);
             bye(taskList, ui, storage);
             break;
         case LIST:
