@@ -1,5 +1,6 @@
 package cors;
 
+import cors.command.CommandType;
 import cors.ui.Cors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -45,9 +46,10 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = cors.getResponse(input);
+        CommandType commandType = cors.getCommandType();
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getCorsDialog(response, corsImage)
+                DialogBox.getCorsDialog(response, corsImage, commandType)
         );
         userInput.clear();
     }

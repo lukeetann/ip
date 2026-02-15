@@ -3,6 +3,7 @@ package cors.ui;
 import cors.Parser;
 import cors.Storage;
 import cors.command.Command;
+import cors.command.CommandType;
 import cors.exception.CorsException;
 import cors.task.TaskList;
 
@@ -13,6 +14,7 @@ public class Cors {
     private TaskList taskList;
     private Storage storage;
     private Ui ui;
+    private CommandType commandType;
 
     /**
      * Initiates a new Cors instance with the given filepath
@@ -34,9 +36,14 @@ public class Cors {
             Parser parser = new Parser();
             Command c = parser.parse(input, ui);
             c.runCommand(taskList, ui, storage);
+            commandType = c.getType();
             return ui.getResponse();
         } catch (Exception e) {
             return e.getMessage();
         }
+    }
+
+    public CommandType getCommandType() {
+        return commandType;
     }
 }
