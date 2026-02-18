@@ -1,6 +1,6 @@
 package cors.task;
 
-import cors.Parser;
+import cors.command.Parser;
 import cors.command.Command;
 import cors.exception.WrongIndexException;
 import cors.ui.Ui;

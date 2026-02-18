@@ -1,4 +1,4 @@
-package cors;
+package cors.ui;
 
 import java.util.ArrayList;
 

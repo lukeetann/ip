@@ -1,12 +1,10 @@
-package cors;
+package cors.command;
 
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 
-import cors.command.Command;
-import cors.command.CommandType;
 import cors.exception.FileErrorException;
 import cors.ui.Ui;
 

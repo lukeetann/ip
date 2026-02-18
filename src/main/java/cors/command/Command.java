@@ -3,7 +3,9 @@ package cors.command;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
-import cors.Storage;
+import javafx.application.Platform;
+
+import cors.storage.Storage;
 import cors.exception.WrongIndexException;
 import cors.task.Deadline;
 import cors.task.Event;
@@ -19,7 +21,6 @@ public class Command {
     private LocalDateTime from;
     private LocalDateTime to;
     private int index;
-    private boolean isExit;
 
     public Command() {
         type = CommandType.EMPTY;
@@ -63,15 +64,21 @@ public class Command {
         this.index = index;
     }
 
-    public boolean isExit() {
-        return isExit;
-    }
-
+    /**
+     * Performs shutdown operations for the application.
+     * This method saves the current state of the provided {@code TaskList} to persistent
+     * storage, displays a goodbye message to the user through the {@code Ui},
+     * and then terminates the JavaFX application by calling {@code Platform.exit()}.
+     * @param taskList
+     * @param ui
+     * @param storage
+     */
     public void bye(TaskList taskList, Ui ui, Storage storage) {
-        isExit = true;
         storage.saveToFile(taskList.getAllTasks());
         ui.showGoodbyeMessage();
+        Platform.exit();
     }
+
     /**
      * Runs keyword command from user or file
      * @param taskList, ui, storage, isFromUser
@@ -85,55 +92,25 @@ public class Command {
             ui.showAllTasks(taskList.getAllTasks());
             break;
         case MARK:
-            if (taskList.mark(index - 1)) {
-                ui.showTaskAsDone(taskList.get(index - 1));
-            }
+            handleMark(taskList, ui, true);
             break;
         case UNMARK:
-            if (taskList.unmark(index - 1)) {
-                ui.showTaskAsNotDone(taskList.get(index - 1));
-            }
+            handleMark(taskList, ui, false);
             break;
         case TODO:
-            if (task == null) {
-                ui.showTodoError();
-            } else {
-                ui.addToResponse(taskList.add(new Todo(task, isMarked)));
-            }
+            handleTodo(taskList, ui);
             break;
         case DEADLINE:
-            if (task == null || by == null) {
-                ui.showDeadlineError();
-            } else {
-                try {
-                    ui.addToResponse(taskList.add(new Deadline(task, isMarked, by)));
-                } catch (DateTimeException e) {
-                    ui.showDateTimeError();
-                }
-            }
+            handleDeadline(taskList, ui);
             break;
         case EVENT:
-            if (task == null || from == null || to == null) {
-                ui.showEventError();
-            } else {
-                try {
-                    ui.addToResponse(taskList.add(new Event(task, isMarked, from, to)));
-                } catch (DateTimeException e) {
-                    ui.showDateTimeError();
-                }
-            }
+            handleEvent(taskList, ui);
             break;
         case DELETE:
-            try {
-                ui.addToResponse(taskList.delete(index - 1));
-            } catch (WrongIndexException e) {
-                ui.addToResponse("Usage: delete <number>\nE.g. delete 3");
-            }
+            handleDelete(taskList, ui);
             break;
         case FIND:
             ui.showMatchingTasks(taskList.getMatchingTasks(task));
-            break;
-        case EMPTY:
             break;
         case FAIL:
             ui.showUserCommandError();
@@ -141,7 +118,60 @@ public class Command {
         default:
             System.out.println("You shouldn't be here...");
         }
-
         return taskList;
     }
+
+    private void handleMark(TaskList taskList, Ui ui, boolean mark) {
+        int i = index - 1;
+        boolean success = mark ? taskList.mark(i) : taskList.unmark(i);
+
+        if (success) {
+            if (mark) {
+                ui.showTaskAsDone(taskList.get(i));
+            } else {
+                ui.showTaskAsNotDone(taskList.get(i));
+            }
+        }
+    }
+
+    private void handleTodo(TaskList taskList, Ui ui) {
+        if (task == null) {
+            ui.showTodoError();
+            return;
+        }
+        ui.addToResponse(taskList.add(new Todo(task, isMarked)));
+    }
+
+    private void handleDeadline(TaskList taskList, Ui ui) {
+        if (task == null || by == null) {
+            ui.showDeadlineError();
+            return;
+        }
+        try {
+            ui.addToResponse(taskList.add(new Deadline(task, isMarked, by)));
+        } catch (DateTimeException e) {
+            ui.showDateTimeError();
+        }
+    }
+
+    private void handleEvent(TaskList taskList, Ui ui) {
+        if (task == null || from == null || to == null) {
+            ui.showEventError();
+            return;
+        }
+        try {
+            ui.addToResponse(taskList.add(new Event(task, isMarked, from, to)));
+        } catch (DateTimeException e) {
+            ui.showDateTimeError();
+        }
+    }
+
+    private void handleDelete(TaskList taskList, Ui ui) {
+        try {
+            ui.addToResponse(taskList.delete(index - 1));
+        } catch (WrongIndexException e) {
+            ui.addToResponse("Usage: delete <number>\nE.g. delete 3");
+        }
+    }
+
 }

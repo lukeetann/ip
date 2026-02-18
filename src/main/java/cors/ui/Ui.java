@@ -1,7 +1,5 @@
 package cors.ui;
 
-import cors.Response;
-
 /**
  * Basic Ui class that manages the returned test
  */

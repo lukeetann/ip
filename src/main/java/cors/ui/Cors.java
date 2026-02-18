@@ -1,10 +1,11 @@
 package cors.ui;
 
-import cors.Parser;
-import cors.Storage;
 import cors.command.Command;
 import cors.command.CommandType;
 import cors.exception.CorsException;
+import cors.command.Parser;
+
+import cors.storage.Storage;
 import cors.task.TaskList;
 
 /**
@@ -32,7 +33,6 @@ public class Cors {
 
     public String getResponse(String input) {
         try {
-            ui.addToResponse("Cor KAWWWW!\n");
             Parser parser = new Parser();
             Command c = parser.parse(input, ui);
             c.runCommand(taskList, ui, storage);

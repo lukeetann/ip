@@ -1,7 +1,6 @@
-package cors;
+package cors.ui;
 
 import cors.command.CommandType;
-import cors.ui.Cors;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
