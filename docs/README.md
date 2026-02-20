@@ -1,6 +1,6 @@
 # Cors User Guide
 
-![Screenshot of Cors Ui showing multiple messages exchanged between user and Cors](/docs/Ui.png)
+![Screenshot of Cors Ui showing multiple messages exchanged between user and Cors](Ui.png)
 
 Welcome to Cors, the friendly chatbot who takes your tasks and helps track your deadlines.
 
