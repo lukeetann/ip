@@ -158,22 +158,22 @@ public class Parser {
     private Command parseComplexCommand(String input, Ui ui) {
 
         if (input.startsWith("mark")) {
-            return parseIndexCommand(input, CommandType.MARK, CommandType.MARK.length() + 1);
+            return parseIndexCommand(input, CommandType.MARK, CommandType.MARK.getLength() + 1);
 
         } else if (input.startsWith("unmark")) {
-            return parseIndexCommand(input, CommandType.UNMARK, CommandType.UNMARK.length() + 1);
+            return parseIndexCommand(input, CommandType.UNMARK, CommandType.UNMARK.getLength() + 1);
 
-        } else if (input.startsWith("todo")) {
-            return parseTodoCommand(input, ui);
+        } else if (input.startsWith("todo") || input.startsWith("t ")) {
+            return parseTodoCommand(input);
 
-        } else if (input.startsWith("deadline")) {
+        } else if (input.startsWith("deadline") || input.startsWith("d ")) {
             return parseDeadlineCommand(input, ui);
 
-        } else if (input.startsWith("event")) {
+        } else if (input.startsWith("event") || input.startsWith("e ")) {
             return parseEventCommand(input, ui);
 
         } else if (input.startsWith("delete")) {
-            return parseIndexCommand(input, CommandType.DELETE, CommandType.DELETE.length() + 1);
+            return parseIndexCommand(input, CommandType.DELETE, CommandType.DELETE.getLength() + 1);
 
         } else if (input.startsWith("find")) {
             return parseFindCommand(input);
@@ -194,11 +194,17 @@ public class Parser {
         return command;
     }
 
-    private Command parseTodoCommand(String input, Ui ui) {
+    private Command parseTodoCommand(String input) {
         Command command = new Command().setType(CommandType.TODO);
 
-        if (input.length() > CommandType.TODO.length() + 1) {
-            command.setTask(input.substring(CommandType.TODO.length() + 1));
+        if (input.startsWith("t ")) {
+            CommandType.TODO.setLengthShort();
+        } else {
+            CommandType.TODO.setTodoLengthLong();
+        }
+
+        if (input.length() > CommandType.TODO.getLength() + 1) {
+            command.setTask(input.substring(CommandType.TODO.getLength() + 1));
         }
 
         return command;
@@ -207,9 +213,15 @@ public class Parser {
     private Command parseDeadlineCommand(String input, Ui ui) {
         Command command = new Command().setType(CommandType.DEADLINE);
 
+        if (input.startsWith("d ")) {
+            CommandType.DEADLINE.setLengthShort();
+        } else {
+            CommandType.DEADLINE.setDeadlineLengthLong();
+        }
+
         int byIndex = input.indexOf(CLI_BY);
         if (byIndex > 0) {
-            command.setTask(input.substring(CommandType.DEADLINE.length(), byIndex));
+            command.setTask(input.substring(CommandType.DEADLINE.getLength(), byIndex));
             parseCliDate(input.substring(byIndex + CLI_BY.length()),
                     command::setBy, command, ui);
         }
@@ -219,6 +231,12 @@ public class Parser {
 
     private Command parseEventCommand(String input, Ui ui) {
         Command command = new Command().setType(CommandType.EVENT);
+
+        if (input.startsWith("t ")) {
+            CommandType.EVENT.setLengthShort();
+        } else {
+            CommandType.EVENT.setEventLengthLong();
+        }
 
         int fromIndex = input.indexOf(CLI_FROM);
         int toIndex = input.indexOf(CLI_TO);
