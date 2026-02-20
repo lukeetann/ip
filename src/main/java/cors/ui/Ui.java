@@ -44,8 +44,12 @@ public class Ui {
                 + "Date must be formatted as such: dd-mm-yyyy 24h");
     }
 
+    public void showFindError() {
+        addToResponse("Error finding. Please enter a search term.");
+    }
+
     /**
-     * Adds the
+     * Shows proper commands
      */
     public void showUserCommandError() {
         addToResponse("Incorrect input!\n"
@@ -63,12 +67,20 @@ public class Ui {
         response.add(s);
     }
 
+    public String getWelcomeMessage() {
+        return "Welcome to Cors!\nHow can I help you?";
+    }
+
     public String getResponse() {
         String s = response.get();
         response.clear();
         return s;
     }
 
+    /**
+     * Shows all tasks
+     * @param tasks
+     */
     public void showAllTasks(String[] tasks) {
         addToResponse("Here are the tasks in your list:");
         for (String task : tasks) {
@@ -76,6 +88,10 @@ public class Ui {
         }
     }
 
+    /**
+     * Shows all matching tasks
+     * @param tasks
+     */
     public void showMatchingTasks(String[] tasks) {
         addToResponse("Here are the matching tasks in your list:");
         for (String task : tasks) {

@@ -1,5 +1,8 @@
 package cors.ui;
 
+import java.io.File;
+import java.io.IOException;
+
 import cors.command.Command;
 import cors.command.CommandType;
 import cors.command.Parser;
@@ -50,5 +53,9 @@ public class Cors {
 
     public CommandType getCommandType() {
         return commandType;
+    }
+
+    public String getWelcomeMessage() {
+        return ui.getWelcomeMessage();
     }
 }

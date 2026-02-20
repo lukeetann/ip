@@ -130,7 +130,7 @@ public class Command {
             handleDelete(taskList, ui);
             break;
         case FIND:
-            ui.showMatchingTasks(taskList.getMatchingTasks(task));
+            handleFind(taskList, ui);
             break;
         case FAIL:
             ui.showUserCommandError();
@@ -196,5 +196,13 @@ public class Command {
         } catch (WrongIndexException e) {
             ui.showIndexError();
         }
+    }
+
+    private void handleFind(TaskList taskList, Ui ui) {
+        if (this.task == null) {
+            ui.showFindError();
+            return;
+        }
+        ui.showMatchingTasks(taskList.getMatchingTasks(task));
     }
 }

@@ -13,7 +13,7 @@ import javafx.stage.Stage;
  * A GUI for Cors using FXML.
  */
 public class Main extends Application {
-    private Cors cors = new Cors("./src/main/java/cors/cors.csv");
+    private Cors cors = new Cors("cors.csv");
     @Override
     public void start(Stage stage) {
         try {

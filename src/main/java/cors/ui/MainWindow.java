@@ -38,6 +38,9 @@ public class MainWindow extends AnchorPane {
     /** Injects the Cors instance */
     public void setCors(Cors cors) {
         this.cors = cors;
+        String welcomeMessage = cors.getWelcomeMessage();
+        dialogContainer.getChildren().addAll(
+                DialogBox.getCorsDialog(welcomeMessage, corsImage, CommandType.LIST));
     }
 
     /**
