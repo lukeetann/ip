@@ -1,11 +1,11 @@
 package cors.task;
 
-import cors.Parser;
+import java.util.ArrayList;
+
 import cors.command.Command;
+import cors.command.Parser;
 import cors.exception.WrongIndexException;
 import cors.ui.Ui;
-
-import java.util.ArrayList;
 
 /**
  * Represents a list of tasks for the chatbot.
@@ -81,7 +81,6 @@ public class TaskList {
      */
     public boolean mark(int index) {
         if (index >= length || index < 0) {
-            System.out.println("Sorry, there is no task at index " + (index + 1));
             return false;
         }
         myList.get(index).markAsComplete();
@@ -95,7 +94,6 @@ public class TaskList {
      */
     public boolean unmark(int index) {
         if (index >= length || index < 0) {
-            System.out.println("Sorry, there is no task at index " + (index + 1));
             return false;
         }
         myList.get(index).markAsIncomplete();
@@ -110,8 +108,7 @@ public class TaskList {
     public String add(Task task) {
         myList.add(task);
         length++;
-        return "Got it, I've added this task:\n" + task
-                + "\nNow you have " + (length) + " tasks in your list.";
+        return task.toString();
     }
 
     /**
@@ -123,11 +120,14 @@ public class TaskList {
         if (num < 0 || num >= myList.size()) {
             throw new WrongIndexException();
         } else {
-            String result = ("Ok, I have removed this task:\n" + myList.get(num)
-                    + "\nNow you have " + (myList.size() - 1) + " tasks left.");
+            String result = get(num);
             myList.remove(num);
             length--;
             return result;
         }
+    }
+
+    public int getLength() {
+        return length;
     }
 }

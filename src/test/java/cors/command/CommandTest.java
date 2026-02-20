@@ -1,6 +1,6 @@
 package cors.command;
 
-import cors.Storage;
+import cors.storage.Storage;
 import cors.task.TaskList;
 
 import cors.ui.Ui;

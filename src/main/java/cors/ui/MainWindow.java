@@ -1,6 +1,6 @@
-package cors;
+package cors.ui;
 
-import cors.ui.Cors;
+import cors.command.CommandType;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -24,12 +24,15 @@ public class MainWindow extends AnchorPane {
 
     private Cors cors;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
-    private Image corsImage = new Image(this.getClass().getResourceAsStream("/images/anonymous.png"));
+    private Image userImage;
+    private Image corsImage;
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
+        corsImage = new Image(this.getClass().getResourceAsStream("/images/anonymous.png"));
+
     }
 
     /** Injects the Cors instance */
@@ -45,11 +48,12 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = cors.getResponse(input);
+        CommandType commandType = cors.getCommandType();
         assert(userImage != null);
         assert(corsImage != null);
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getCorsDialog(response, corsImage)
+                DialogBox.getCorsDialog(response, corsImage, commandType)
         );
         userInput.clear();
     }

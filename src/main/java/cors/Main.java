@@ -3,6 +3,7 @@ package cors;
 import java.io.IOException;
 
 import cors.ui.Cors;
+import cors.ui.MainWindow;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

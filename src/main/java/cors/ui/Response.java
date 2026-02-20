@@ -1,7 +1,11 @@
-package cors;
+package cors.ui;
 
 import java.util.ArrayList;
 
+/**
+ * Separate class to handle Response logic and
+ * ensure strings are handled properly.
+ */
 public class Response {
     private ArrayList<String> response;
 

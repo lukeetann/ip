@@ -1,8 +1,9 @@
-package cors;
+package cors.ui;
 
 import java.io.IOException;
 import java.util.Collections;
 
+import cors.command.CommandType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -46,15 +47,39 @@ public class DialogBox extends HBox {
         Collections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
+        dialog.getStyleClass().add("reply-label");
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
         return new DialogBox(text, img);
     }
 
-    public static DialogBox getCorsDialog(String text, Image img) {
+    public static DialogBox getCorsDialog(String text, Image img, CommandType commandType) {
         var db = new DialogBox(text, img);
         db.flip();
+        db.changeDialogStyle(commandType);
         return db;
+    }
+
+    private void changeDialogStyle(CommandType commandType) {
+        switch(commandType) {
+        case TODO:
+            // Fall through
+        case DEADLINE:
+            // Fall through
+        case EVENT:
+            dialog.getStyleClass().add("add-label");
+            break;
+        case MARK:
+            // Fall through
+        case UNMARK:
+            dialog.getStyleClass().add("marked-label");
+            break;
+        case DELETE:
+            dialog.getStyleClass().add("delete-label");
+            break;
+        default:
+            // Do nothing
+        }
     }
 }
