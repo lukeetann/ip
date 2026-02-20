@@ -24,12 +24,15 @@ public class MainWindow extends AnchorPane {
 
     private Cors cors;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
-    private Image corsImage = new Image(this.getClass().getResourceAsStream("/images/anonymous.png"));
+    private Image userImage;
+    private Image corsImage;
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        userImage = new Image(this.getClass().getResourceAsStream("/images/user.png"));
+        corsImage = new Image(this.getClass().getResourceAsStream("/images/anonymous.png"));
+
     }
 
     /** Injects the Cors instance */

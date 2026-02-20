@@ -2,9 +2,8 @@ package cors.ui;
 
 import cors.command.Command;
 import cors.command.CommandType;
-import cors.exception.CorsException;
 import cors.command.Parser;
-
+import cors.exception.CorsException;
 import cors.storage.Storage;
 import cors.task.TaskList;
 
@@ -31,6 +30,12 @@ public class Cors {
         }
     }
 
+    /**
+     * Takes in the commands from user input, parses
+     * and runs the command, then returns the output
+     * @param input
+     * @return response
+     */
     public String getResponse(String input) {
         try {
             Parser parser = new Parser();

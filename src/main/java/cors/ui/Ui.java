@@ -10,6 +10,11 @@ public class Ui {
         response = new Response();
     }
 
+
+    public void showIndexError() {
+        addToResponse("Index is not valid");
+    }
+
     public void showTodoError() {
         addToResponse("Usage: todo <todo item>\nE.g. todo buy book");
     }
@@ -39,6 +44,9 @@ public class Ui {
                 + "Date must be formatted as such: dd-mm-yyyy 24h");
     }
 
+    /**
+     * Adds the
+     */
     public void showUserCommandError() {
         addToResponse("Incorrect input!\n"
                 + "To add an item to the list, type todo, deadline, or event.\n"
@@ -77,18 +85,43 @@ public class Ui {
         }
     }
 
+    /**
+     * Shows the task that is marked as done
+     * @param task
+     */
     public void showTaskAsDone(String task) {
         addToResponse("Nice! I've marked this task as done:");
         addToResponse(task);
     }
 
+    /**
+     * Shows the task that is marked as not done
+     * @param task
+     */
     public void showTaskAsNotDone(String task) {
         addToResponse("OK! I've marked this task as not done yet:");
         addToResponse(task);
     }
 
-    public void showDeletedTask(String task) {
+    /**
+     * Shows the deleted tasks
+     * @param task
+     * @param length
+     */
+    public void showDeletedTask(String task, int length) {
         addToResponse("Nice, I've deleted this task:");
         addToResponse(task);
+        addToResponse("You now have " + length + " tasks in your list.");
+    }
+
+    /**
+     * Shows the added tasks
+     * @param task
+     * @param length
+     */
+    public void showAddedTask(String task, int length) {
+        addToResponse("Got it, I've added this task:");
+        addToResponse(task);
+        addToResponse("Now you have " + length + " tasks in your list.");
     }
 }

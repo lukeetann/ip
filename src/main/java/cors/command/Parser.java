@@ -4,6 +4,7 @@ import java.time.DateTimeException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
+import java.util.function.Consumer;
 
 import cors.exception.FileErrorException;
 import cors.ui.Ui;
@@ -13,166 +14,251 @@ import cors.ui.Ui;
  */
 public class Parser {
 
+    // === File parsing indexes ===
+    private static final int COMMAND_TYPE_INDEX = 1;
+    private static final int MARK_INDEX = 5;
+    private static final int TASK_START_INDEX = 8;
+
+    // === File format tokens ===
+    private static final String BY_TOKEN = " (by: ";
+    private static final String FROM_TOKEN = " (from: ";
+    private static final String TO_TOKEN = " to: ";
+
+    // === CLI tokens ===
+    private static final String CLI_BY = " /by ";
+    private static final String CLI_FROM = " /from ";
+    private static final String CLI_TO = " /to ";
+
+    // === Date patterns ===
+    private static final String DATE_PATTERN_SHORT = "d MMM yyyy', 'ha";
+    private static final String DATE_PATTERN_LONG = "dd MMM yyyy', 'ha";
+    private static final String CLI_DATE_PATTERN = "dd-MM-yyyy HHmm";
+
+    private static final int DATE_LENGTH_THRESHOLD = 15;
+
     /**
      * Parses a single line of text from the save file into a Command object.
-     * Expected format: "[T] [X] task description" or "[D] [ ] task (by: date)".
-     * @param input The raw string line from the storage file.
-     * @return A Command object configured with the task details.
-     * @throws FileErrorException If the file format does not match expected patterns.
      */
     public Command parseFromFile(String input) {
-        Command c = new Command();
         if (input == null) {
-            c.setType(CommandType.EMPTY);
-        } else {
-            String pattern;
-            // Check the task type indicator at the start of the string
-            switch (input.substring(0, 3)) {
-            case ("[T]"):
-                c.setType(CommandType.TODO);
-                c.setTask(input.substring(8));
-                // Index 5 corresponds to the status icon: [T] [X] or [T] [ ]
-                if (input.charAt(5) == 'X') {
-                    c.mark();
-                } else {
-                    c.unmark();
-                }
-                break;
-            case ("[D]"):
-                c.setType(CommandType.DEADLINE);
-                int indexBy = input.indexOf(" (by: ");
-                c.setTask(input.substring(8, indexBy));
-                if (input.charAt(5) == 'X') {
-                    c.mark();
-                } else {
-                    c.unmark();
-                }
-                // Determine date pattern based on string length (handles d vs dd for day)
-                if (input.length() - indexBy - 7 > 15) {
-                    pattern = "dd MMM yyyy', 'ha";
-                } else {
-                    pattern = "d MMM yyyy', 'ha";
-                }
-                DateTimeFormatter format = new DateTimeFormatterBuilder()
-                        .parseCaseInsensitive().appendPattern(pattern).toFormatter();
-                c.setBy(LocalDateTime.parse(input.substring(indexBy + 6, input.length() - 1),
-                        format));
-                break;
-            case ("[E]"):
-                try {
-                    c.setType(CommandType.EVENT);
-                    int indexFrom = input.indexOf(" (from: ");
-                    int indexTo = input.indexOf(" to: ");
-                    c.setTask(input.substring(8, indexFrom));
-                    if (input.charAt(5) == 'X') {
-                        c.mark();
-                    } else {
-                        c.unmark();
-                    }
-                    // Handle dynamic date padding for 'from' field
-                    if (indexTo - indexFrom - 8 > 15) {
-                        pattern = "dd MMM yyyy', 'ha";
-                    } else {
-                        pattern = "d MMM yyyy', 'ha";
-                    }
-                    c.setFrom(LocalDateTime.parse(input.substring(indexFrom + 8, indexTo),
-                            DateTimeFormatter.ofPattern(pattern)));
-                    // Handle dynamic date padding for 'to' field
-                    if (input.length() - indexTo - 6 > 15) {
-                        pattern = "dd MMM yyyy', 'ha";
-                    } else {
-                        pattern = "d MMM yyyy', 'ha";
-                    }
-                    c.setTo(LocalDateTime.parse(input.substring(indexTo + 5, input.length() - 1),
-                            DateTimeFormatter.ofPattern(pattern)));
-                    break;
-                } catch (DateTimeException e) {
-                    throw new FileErrorException();
-                }
-            default:
-                throw new FileErrorException(); // Possibly misleading since it takes in a String[]
-            }
+            return new Command().setType(CommandType.EMPTY);
         }
-        return c;
+
+        switch (input.charAt(COMMAND_TYPE_INDEX)) {
+        case 'T':
+            return parseTodoFromFile(input);
+        case 'D':
+            return parseDeadlineFromFile(input);
+        case 'E':
+            return parseEventFromFile(input);
+        default:
+            throw new FileErrorException();
+        }
+    }
+
+    private Command parseTodoFromFile(String input) {
+        Command command = new Command()
+                .setType(CommandType.TODO)
+                .setTask(input.substring(TASK_START_INDEX));
+
+        return applyMarkStatus(command, input);
+    }
+
+    private Command parseDeadlineFromFile(String input) {
+        Command command = new Command().setType(CommandType.DEADLINE);
+        applyMarkStatus(command, input);
+
+        int byIndex = input.indexOf(BY_TOKEN);
+        command.setTask(input.substring(TASK_START_INDEX, byIndex));
+
+        LocalDateTime byDate = parseFileDate(
+                input,
+                byIndex + BY_TOKEN.length(),
+                input.length() - 1,
+                input.length() - byIndex - BY_TOKEN.length() - 1
+        );
+
+        command.setBy(byDate);
+        return command;
+    }
+
+    private Command parseEventFromFile(String input) {
+        try {
+            Command command = new Command().setType(CommandType.EVENT);
+            applyMarkStatus(command, input);
+
+            int fromIndex = input.indexOf(FROM_TOKEN);
+            int toIndex = input.indexOf(TO_TOKEN);
+
+            command.setTask(input.substring(TASK_START_INDEX, fromIndex));
+
+            LocalDateTime from = parseFileDate(
+                    input,
+                    fromIndex + FROM_TOKEN.length(),
+                    toIndex,
+                    toIndex - fromIndex - FROM_TOKEN.length()
+            );
+
+            LocalDateTime to = parseFileDate(
+                    input,
+                    toIndex + TO_TOKEN.length(),
+                    input.length() - 1,
+                    input.length() - toIndex - TO_TOKEN.length() - 1
+            );
+
+            command.setFrom(from);
+            command.setTo(to);
+
+            return command;
+
+        } catch (DateTimeException e) {
+            throw new FileErrorException();
+        }
+    }
+
+    private Command applyMarkStatus(Command command, String input) {
+        if (input.charAt(MARK_INDEX) == 'X') {
+            return command.mark();
+        }
+        return command.unmark();
+    }
+
+    private LocalDateTime parseFileDate(String input,
+                                        int start,
+                                        int end,
+                                        int lengthCheck) {
+
+        String pattern = (lengthCheck > DATE_LENGTH_THRESHOLD)
+                ? DATE_PATTERN_LONG
+                : DATE_PATTERN_SHORT;
+
+        DateTimeFormatter formatter = new DateTimeFormatterBuilder()
+                .parseCaseInsensitive()
+                .appendPattern(pattern)
+                .toFormatter();
+
+        return LocalDateTime.parse(input.substring(start, end), formatter);
     }
 
     /**
-     * Parses the raw user input from the CLI into a Command object.
-     * @param input The full command string entered by the user.
-     * @param ui The UI object used to display immediate feedback/errors.
-     * @return A Command object representing the user's intent.
+     * Parses the raw user input from CLI into a Command object.
      */
     public Command parse(String input, Ui ui) {
-        Command c = new Command();
 
-        // Handle single-word commands first
         switch (input) {
-        case ("bye"):
-            c.setType(CommandType.BYE);
-            break;
-        case ("list"):
-            c.setType(CommandType.LIST);
-            break;
+        case "bye":
+            return new Command().setType(CommandType.BYE);
+        case "list":
+            return new Command().setType(CommandType.LIST);
         default:
-            // Handle multi-word commands (mark, unmark, todo, deadline, event, delete)
-            if (input.length() >= 6 && input.startsWith("mark")) {
-                int index = Integer.parseInt(input.substring(5));
-                c.setType(CommandType.MARK);
-                c.setIndex(index);
-            } else if (input.length() >= 8 && input.startsWith("unmark")) {
-                int index = Integer.parseInt(input.substring(7));
-                c.setType(CommandType.UNMARK);
-                c.setIndex(index);
-            } else if (input.startsWith("todo")) {
-                c.setType(CommandType.TODO);
-                if (input.length() >= 6) {
-                    c.setTask(input.substring(5));
-                }
-            } else if (input.startsWith("deadline")) {
-                c.setType(CommandType.DEADLINE);
-                int by = input.indexOf(" /by ") + 5;
-                if (input.length() >= 10 && by > 4) {
-                    c.setTask(input.substring(9, by - 5));
-                    try {
-                        // Expected format: dd-MM-yyyy HHmm
-                        c.setBy(LocalDateTime.parse(input.substring(by),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm")));
-                    } catch (DateTimeException e) {
-                        c.setType(CommandType.EMPTY);
-                        ui.showDateTimeError();
-                    }
-                }
-            } else if (input.startsWith("event")) {
-                c.setType(CommandType.EVENT);
-                if (input.indexOf(" /from ") > 6 && input.contains(" /to ")) {
-                    int from = input.indexOf(" /from ") + 7;
-                    int to = input.indexOf(" /to ") + 5;
-                    c.setTask(input.substring(6, from - 7));
-                    try {
-                        c.setFrom(LocalDateTime.parse(input.substring(from, (to - 5)),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm")));
-                        c.setTo(LocalDateTime.parse(input.substring(to),
-                                DateTimeFormatter.ofPattern("dd-MM-yyyy HHmm")));
-                    } catch (DateTimeException e) {
-                        c.setType(CommandType.EMPTY);
-                        ui.showDateTimeError();
-                    }
-                }
-            } else if (input.startsWith("delete")) {
-                c.setType(CommandType.DELETE);
-                if (input.length() > 7) {
-                    int index = Integer.parseInt(input.substring(7));
-                    c.setIndex(index);
-                }
-            } else if (input.startsWith("find")) {
-                c.setType(CommandType.FIND);
-                if (input.length() > 5) {
-                    c.setTask(input.substring(5));
-                }
-            } else {
-                c.setType(CommandType.FAIL);
-            }
+            return parseComplexCommand(input, ui);
         }
-        return c;
+    }
+
+    private Command parseComplexCommand(String input, Ui ui) {
+
+        if (input.startsWith("mark")) {
+            return parseIndexCommand(input, CommandType.MARK, CommandType.MARK.length() + 1);
+
+        } else if (input.startsWith("unmark")) {
+            return parseIndexCommand(input, CommandType.UNMARK, CommandType.UNMARK.length() + 1);
+
+        } else if (input.startsWith("todo")) {
+            return parseTodoCommand(input, ui);
+
+        } else if (input.startsWith("deadline")) {
+            return parseDeadlineCommand(input, ui);
+
+        } else if (input.startsWith("event")) {
+            return parseEventCommand(input, ui);
+
+        } else if (input.startsWith("delete")) {
+            return parseIndexCommand(input, CommandType.DELETE, CommandType.DELETE.length() + 1);
+
+        } else if (input.startsWith("find")) {
+            return parseFindCommand(input);
+        }
+
+        return new Command().setType(CommandType.FAIL);
+    }
+
+    private Command parseIndexCommand(String input, CommandType type, int indexStart) {
+
+        Command command = new Command().setType(type);
+
+        if (input.length() > indexStart) {
+            int index = Integer.parseInt(input.substring(indexStart));
+            command.setIndex(index);
+        }
+
+        return command;
+    }
+
+    private Command parseTodoCommand(String input, Ui ui) {
+        Command command = new Command().setType(CommandType.TODO);
+
+        if (input.length() > CommandType.TODO.length() + 1) {
+            command.setTask(input.substring(CommandType.TODO.length() + 1));
+        }
+
+        return command;
+    }
+
+    private Command parseDeadlineCommand(String input, Ui ui) {
+        Command command = new Command().setType(CommandType.DEADLINE);
+
+        int byIndex = input.indexOf(CLI_BY);
+        if (byIndex > 0) {
+            command.setTask(input.substring(CommandType.DEADLINE.length(), byIndex));
+            parseCliDate(input.substring(byIndex + CLI_BY.length()),
+                    command::setBy, command, ui);
+        }
+
+        return command;
+    }
+
+    private Command parseEventCommand(String input, Ui ui) {
+        Command command = new Command().setType(CommandType.EVENT);
+
+        int fromIndex = input.indexOf(CLI_FROM);
+        int toIndex = input.indexOf(CLI_TO);
+
+        if (fromIndex > 0 && toIndex > fromIndex) {
+            command.setTask(input.substring(6, fromIndex));
+
+            parseCliDate(input.substring(fromIndex + CLI_FROM.length(), toIndex),
+                    command::setFrom, command, ui);
+
+            parseCliDate(input.substring(toIndex + CLI_TO.length()),
+                    command::setTo, command, ui);
+        }
+
+        return command;
+    }
+
+    private Command parseFindCommand(String input) {
+        Command command = new Command().setType(CommandType.FIND);
+
+        if (input.length() > 5) {
+            command.setTask(input.substring(5));
+        }
+
+        return command;
+    }
+
+    private void parseCliDate(String dateString,
+                              Consumer<LocalDateTime> setter,
+                              Command command,
+                              Ui ui) {
+
+        try {
+            setter.accept(LocalDateTime.parse(
+                    dateString,
+                    DateTimeFormatter.ofPattern(CLI_DATE_PATTERN)
+            ));
+        } catch (DateTimeException e) {
+            command.setType(CommandType.EMPTY);
+            ui.showDateTimeError();
+        }
     }
 }

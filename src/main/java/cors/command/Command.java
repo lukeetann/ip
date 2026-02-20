@@ -3,16 +3,19 @@ package cors.command;
 import java.time.DateTimeException;
 import java.time.LocalDateTime;
 
-import javafx.application.Platform;
-
-import cors.storage.Storage;
+import cors.exception.CorsException;
 import cors.exception.WrongIndexException;
+import cors.storage.Storage;
 import cors.task.Deadline;
 import cors.task.Event;
 import cors.task.TaskList;
 import cors.task.Todo;
 import cors.ui.Ui;
+import javafx.application.Platform;
 
+/**
+ * Command class to handle command logic and attributes
+ */
 public class Command {
     private CommandType type;
     private String task;
@@ -22,6 +25,9 @@ public class Command {
     private LocalDateTime to;
     private int index;
 
+    /**
+     * Instantiates an empty command
+     */
     public Command() {
         type = CommandType.EMPTY;
         index = -1;
@@ -36,16 +42,29 @@ public class Command {
         return type;
     }
 
-    public void setTask(String task) {
+    public Command setTask(String task) {
         this.task = task;
+        return this;
     }
 
-    public void mark() {
+    /**
+     * Sets the isMarked value to true and
+     * return the command
+     * @return this
+     */
+    public Command mark() {
         this.isMarked = true;
+        return this;
     }
 
-    public void unmark() {
+    /**
+     * Sets the isMarked value to false and
+     * returns the command
+     * @return this
+     */
+    public Command unmark() {
         this.isMarked = false;
+        return this;
     }
 
     public void setBy(LocalDateTime by) {
@@ -115,8 +134,10 @@ public class Command {
         case FAIL:
             ui.showUserCommandError();
             break;
+        case EMPTY:
+            break;
         default:
-            System.out.println("You shouldn't be here...");
+            throw new CorsException("CommandType not valid");
         }
         return taskList;
     }
@@ -131,6 +152,8 @@ public class Command {
             } else {
                 ui.showTaskAsNotDone(taskList.get(i));
             }
+        } else {
+            ui.showIndexError();
         }
     }
 
@@ -139,7 +162,7 @@ public class Command {
             ui.showTodoError();
             return;
         }
-        ui.addToResponse(taskList.add(new Todo(task, isMarked)));
+        ui.showAddedTask(taskList.add(new Todo(task, isMarked)), taskList.getLength());
     }
 
     private void handleDeadline(TaskList taskList, Ui ui) {
@@ -148,7 +171,7 @@ public class Command {
             return;
         }
         try {
-            ui.addToResponse(taskList.add(new Deadline(task, isMarked, by)));
+            ui.showAddedTask(taskList.add(new Deadline(task, isMarked, by)), taskList.getLength());
         } catch (DateTimeException e) {
             ui.showDateTimeError();
         }
@@ -160,7 +183,7 @@ public class Command {
             return;
         }
         try {
-            ui.addToResponse(taskList.add(new Event(task, isMarked, from, to)));
+            ui.showAddedTask(taskList.add(new Event(task, isMarked, from, to)), taskList.getLength());
         } catch (DateTimeException e) {
             ui.showDateTimeError();
         }
@@ -168,10 +191,9 @@ public class Command {
 
     private void handleDelete(TaskList taskList, Ui ui) {
         try {
-            ui.addToResponse(taskList.delete(index - 1));
+            ui.showDeletedTask(taskList.delete(index - 1), taskList.getLength());
         } catch (WrongIndexException e) {
-            ui.addToResponse("Usage: delete <number>\nE.g. delete 3");
+            ui.showIndexError();
         }
     }
-
 }
